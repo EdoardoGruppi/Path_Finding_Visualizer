@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Node from "./Node/Node";
 import "./PathFindingVisualizer.css";
 import { dijkstra, getNodesInShortestPathOrder } from "../Algorithms/Dijkstra";
+import "../Design/Button.css";
 
 const START_NODE_ROW = 10;
 const START_NODE_COL = 15;
@@ -103,7 +104,11 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
-        <button id="btn" onClick={() => this.visualizeDijkstra()}>
+        <button
+          className="bn4"
+          id="btn"
+          onClick={() => this.visualizeDijkstra()}
+        >
           Visualize Dijkstra's Algorithm
         </button>
         <div className="grid">
