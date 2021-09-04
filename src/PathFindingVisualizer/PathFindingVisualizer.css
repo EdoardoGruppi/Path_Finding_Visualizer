@@ -1,11 +1,11 @@
 body {
-    height: 95%;
-    margin: 0;
-    background: whitesmoke;
-  }
+  height: 95%;
+  margin: 0;
+  background: whitesmoke;
+}
 
-.grid{
-    margin-top: 22vh;
-    margin-bottom: 2vh;
-    max-height: 70vh;
+.grid {
+  margin-top: 22vh;
+  margin-bottom: 2vh;
+  max-height: 70vh;
 }

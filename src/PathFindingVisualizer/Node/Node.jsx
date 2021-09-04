@@ -1,15 +1,39 @@
 import React, { Component } from "react";
-import './Node.css'
+import "./Node.css";
 
-export default class Node extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            side: this.props.side,
-        };
-    }
+export default class Node extends Component {
+  render() {
+    const {
+      col,
+      isFinish,
+      isStart,
+      isWall,
+      side,
+      onMouseDown,
+      onMouseEnter,
+      onMouseUp,
+      row,
+    } = this.props;
+    const extraClassName = isFinish
+      ? "node-finish"
+      : isStart
+      ? "node-start"
+      : isWall
+      ? "node-wall"
+      : "";
 
-    render() {
-        return <div className='node' style={{ height: `${this.state.side}vh`, width: `${this.state.side}vh`}}></div>;
-    }
+    return (
+      <div
+        id={`node-${row}-${col}`}
+        style={{
+          height: `${side}vh`,
+          width: `${side}vh`,
+        }}
+        className={`node ${extraClassName}`}
+        onMouseDown={() => onMouseDown(row, col)}
+        onMouseEnter={() => onMouseEnter(row, col)}
+        onMouseUp={() => onMouseUp()}
+      ></div>
+    );
+  }
 }
