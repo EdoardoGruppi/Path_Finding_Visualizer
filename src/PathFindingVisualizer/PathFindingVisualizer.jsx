@@ -225,6 +225,25 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
+  clearGridKeepWall() {
+    const { grid } = this.state;
+    for (let row of grid) {
+      for (let node of row) {
+        resetNode(node, true);
+        const extraClassName = node.isFinish
+          ? "node-finish"
+          : node.isStart
+          ? "node-start"
+          : node.isWall
+          ? "node-wall"
+          : "";
+        document.getElementById(
+          `node-${node.row}-${node.col}`
+        ).className = `node ${extraClassName}`;
+      }
+    }
+  }
+
   updateGridSize() {
     this.clearGrid();
     const rows = document.getElementById("n_rows").value;
@@ -288,7 +307,14 @@ export default class PathfindingVisualizer extends Component {
           id="btn"
           onClick={() => this.clearGrid()}
         >
-          CLEAN GRID
+          CLEAR GRID
+        </button>
+        <button
+          className="button_slide slide_down"
+          id="btn2"
+          onClick={() => this.clearGridKeepWall()}
+        >
+          CLEAR PATH
         </button>
         <select
           id="select_box"
@@ -337,11 +363,11 @@ export default class PathfindingVisualizer extends Component {
   }
 }
 
-function resetNode(node) {
+function resetNode(node, keepWall = false) {
   node.distance = Infinity;
   node.isVisited = false;
   node.previousNode = null;
-  node.isWall = false;
+  if (!keepWall) node.isWall = false;
 }
 
 const getNewGridWithWallToggled = (grid, row, col) => {
