@@ -3,11 +3,7 @@ import Node from "./Node/Node";
 import "./PathFindingVisualizer.css";
 import { dijkstra, getNodesInShortestPathOrder } from "../Algorithms/Dijkstra";
 import "../Design/Button.css";
-
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+import "../Design/SelectBox.css";
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -18,12 +14,32 @@ export default class PathfindingVisualizer extends Component {
       cols: 52,
       speed: 10,
       mouseIsPressed: false,
+      startNodeRow: 10,
+      startNodeCol: 15,
+      finishNodeRow: 10,
+      finishNodeCol: 35,
     };
   }
 
   componentDidMount() {
     const grid = this.getInitialGrid();
-    this.setState({ grid });
+    this.setState({ grid: grid });
+  }
+
+  createNode(col, row) {
+    // Create a node with the default values
+    return {
+      col,
+      row,
+      isStart:
+        row === this.state.startNodeRow && col === this.state.startNodeCol,
+      isFinish:
+        row === this.state.finishNodeRow && col === this.state.finishNodeCol,
+      distance: Infinity,
+      isVisited: false,
+      isWall: false,
+      previousNode: null,
+    };
   }
 
   getInitialGrid() {
@@ -31,7 +47,7 @@ export default class PathfindingVisualizer extends Component {
     for (let row = 0; row < this.state.rows; row++) {
       const currentRow = [];
       for (let col = 0; col < this.state.cols; col++) {
-        currentRow.push(createNode(col, row));
+        currentRow.push(this.createNode(col, row));
       }
       grid.push(currentRow);
     }
@@ -87,15 +103,35 @@ export default class PathfindingVisualizer extends Component {
   }
 
   visualizeDijkstra() {
-    const { grid } = this.state;
+    const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
+      this.state;
     // Set up the starting and final nodes
-    const startNode = grid[START_NODE_ROW][START_NODE_COL];
-    const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const startNode = grid[startNodeRow][startNodeCol];
+    const finishNode = grid[finishNodeRow][finishNodeCol];
     // Get the visited nodes in order
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     // Get the nodes, belonging to the shortest path and visisted in order
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  clearGrid() {
+    const { grid } = this.state;
+    for (let row of grid) {
+      for (let node of row) {
+        resetNode(node);
+        const extraClassName = node.isFinish
+          ? "node-finish"
+          : node.isStart
+          ? "node-start"
+          : node.isWall
+          ? "node-wall"
+          : "";
+        document.getElementById(
+          `node-${node.row}-${node.col}`
+        ).className = `node ${extraClassName}`;
+      }
+    }
   }
 
   render() {
@@ -105,12 +141,24 @@ export default class PathfindingVisualizer extends Component {
     return (
       <>
         <button
-          className="bn4"
+          className="button_slide slide_down"
           id="btn"
-          onClick={() => this.visualizeDijkstra()}
+          onClick={() => this.clearGrid()}
         >
-          Visualize Dijkstra's Algorithm
+          CLEAN GRID
         </button>
+        <select
+          id="select_box"
+          className="box slide_down"
+          onChange={() => {
+            let value = document.getElementById("select_box").value;
+            if (value !== "default") this[value]();
+          }}
+          defaultValue="default"
+        >
+          <option value="default">ALGORITHM</option>
+          <option value="visualizeDijkstra">DIJKSTRA</option>
+        </select>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
@@ -144,19 +192,12 @@ export default class PathfindingVisualizer extends Component {
   }
 }
 
-const createNode = (col, row) => {
-  // Create a node with the default values
-  return {
-    col,
-    row,
-    isStart: row === START_NODE_ROW && col === START_NODE_COL,
-    isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
-    distance: Infinity,
-    isVisited: false,
-    isWall: false,
-    previousNode: null,
-  };
-};
+function resetNode(node) {
+  node.distance = Infinity;
+  node.isVisited = false;
+  node.previousNode = null;
+  node.isWall = false;
+}
 
 const getNewGridWithWallToggled = (grid, row, col) => {
   // Recreate the grid changing the wall prop where needed
