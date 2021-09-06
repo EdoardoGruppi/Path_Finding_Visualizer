@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Node from "./Node/Node";
 import "./PathFindingVisualizer.css";
 import { dijkstra } from "../Algorithms/Dijkstra";
+import { breadthFirst } from "../Algorithms/BreadthFirst";
 import { getNodesInShortestPathOrder } from "../Algorithms/Utils";
 import "../Design/Button.css";
 import "../Design/SelectBox.css";
@@ -178,6 +179,19 @@ export default class PathfindingVisualizer extends Component {
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
+  visualizeBreadthFirst() {
+    const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
+      this.state;
+    // Set up the starting and final nodes
+    const startNode = grid[startNodeRow][startNodeCol];
+    const finishNode = grid[finishNodeRow][finishNodeCol];
+    // Get the visited nodes in order
+    const visitedNodesInOrder = breadthFirst(grid, startNode, finishNode);
+    // Get the nodes, belonging to the shortest path and visisted in order
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
   clearGrid() {
     const { grid } = this.state;
     for (let row of grid) {
@@ -248,8 +262,8 @@ export default class PathfindingVisualizer extends Component {
             className="range"
             id="n_rows"
             type="range"
-            min="6"
-            step="2"
+            min="5"
+            step="1"
             defaultValue="20"
             max="28"
             onChange={() => this.updateGridSize()}
@@ -273,6 +287,7 @@ export default class PathfindingVisualizer extends Component {
         >
           <option value="default">ALGORITHM</option>
           <option value="visualizeDijkstra">DIJKSTRA</option>
+          <option value="visualizeBreadthFirst">BREADTH FIRST</option>
         </select>
         <div className="grid">
           {grid.map((row, rowIdx) => {
