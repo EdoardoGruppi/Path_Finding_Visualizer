@@ -1,3 +1,8 @@
+@font-face {
+  font-family: FontAwesome;
+  src: url("https://kit.fontawesome.com/a076d05399.js");
+}
+
 .node {
   outline: 0.001vh solid rgb(175, 216, 248);
   display: inline-block;
@@ -5,15 +10,55 @@
   margin-top: 0.25vh;
 }
 
-.node-finish {
-  background-color: red;
+.node-start {
+  background-color: rgb(0, 128, 0, 0.6);
+  /* Image downloaded from  https://fontawesome.com/*/
+  background-image: url("./Icons/play-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 55%;
+  background-position: center;
 }
 
-.node-start {
-  background-color: green;
+.node-finish {
+  background-color: rgb(255, 0, 0, 0.65);
+  /* Image downloaded from  https://fontawesome.com/*/
+  background-image: url("./Icons/trophy-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: center;
 }
 
 .node-visited {
+  animation-name: visitedAnimation;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.start-node-visited {
+  background-image: url("./Icons/play-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 55%;
+  background-position: center;
+  animation-name: visitedAnimation;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.finish-node-visited {
+  background-image: url("./Icons/trophy-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: center;
   animation-name: visitedAnimation;
   animation-duration: 1.2s;
   animation-timing-function: ease-out;
@@ -51,6 +96,36 @@
 }
 
 .node-shortest-path {
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.start-node-shortest-path {
+  background-image: url("./Icons/play-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 55%;
+  background-position: center;
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.finish-node-shortest-path {
+  background-image: url("./Icons/trophy-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-position: center;
   animation-name: shortestPath;
   animation-duration: 1.5s;
   animation-timing-function: ease-out;
