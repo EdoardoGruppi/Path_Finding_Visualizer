@@ -4,6 +4,7 @@ import "./PathFindingVisualizer.css";
 import { dijkstra, getNodesInShortestPathOrder } from "../Algorithms/Dijkstra";
 import "../Design/Button.css";
 import "../Design/SelectBox.css";
+import "../Design/Slider.css";
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -18,6 +19,7 @@ export default class PathfindingVisualizer extends Component {
       startNodeCol: 15,
       finishNodeRow: 10,
       finishNodeCol: 35,
+      itemPressed: null,
     };
   }
 
@@ -56,20 +58,72 @@ export default class PathfindingVisualizer extends Component {
 
   handleMouseDown(row, col) {
     // Function called when the mouse is pressed down
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({ grid: newGrid, mouseIsPressed: true });
+    const node = this.state.grid[row][col];
+    let itemPressed = null;
+    let newGrid = [];
+    if (node.isStart) {
+      newGrid = this.moveStartNode(this.state.grid, row, col);
+      itemPressed = "startNode";
+    } else if (node.isFinish) {
+      newGrid = this.moveFinishNode(this.state.grid, row, col);
+      itemPressed = "finishNode";
+    } else {
+      newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+    }
+    this.setState({
+      grid: newGrid,
+      mouseIsPressed: true,
+      itemPressed: itemPressed,
+    });
   }
 
   handleMouseEnter(row, col) {
     // Change the nodes wall status if the mouse is moved after being pressed down
     if (!this.state.mouseIsPressed) return;
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+    let newGrid = [];
+    if (this.state.itemPressed === "startNode") {
+      newGrid = this.moveStartNode(this.state.grid, row, col);
+    } else if (this.state.itemPressed === "finishNode") {
+      newGrid = this.moveFinishNode(this.state.grid, row, col);
+    } else {
+      newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+    }
     this.setState({ grid: newGrid });
   }
 
   handleMouseUp() {
     // Function called when the mouse is pressed up
-    this.setState({ mouseIsPressed: false });
+    this.setState({ mouseIsPressed: false, itemPressed: null });
+  }
+
+  moveStartNode(grid, row, col) {
+    const { startNodeRow, startNodeCol } = this.state;
+    const previousStartNode = grid[startNodeRow][startNodeCol];
+    previousStartNode.isStart = false;
+
+    const newStartNode = grid[row][col];
+    const newNode = {
+      ...newStartNode,
+      isStart: true,
+    };
+    grid[row][col] = newNode;
+    this.setState({ startNodeRow: row, startNodeCol: col });
+    return grid;
+  }
+
+  moveFinishNode(grid, row, col) {
+    const { finishNodeRow, finishNodeCol } = this.state;
+    const previousFinishNode = grid[finishNodeRow][finishNodeCol];
+    previousFinishNode.isFinish = false;
+
+    const newFinishNode = grid[row][col];
+    const newNode = {
+      ...newFinishNode,
+      isFinish: true,
+    };
+    grid[row][col] = newNode;
+    this.setState({ finishNodeRow: row, finishNodeCol: col });
+    return grid;
   }
 
   animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -142,12 +196,46 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
+  updateGridSize() {
+    this.clearGrid();
+    const rows = document.getElementById("n_rows").value;
+    const cols = rows * 2.6;
+    this.setState(
+      {
+        rows: rows,
+        cols: cols,
+        startNodeRow: randomIntFromInterval(0, rows - 1),
+        startNodeCol: randomIntFromInterval(0, cols / 2),
+        finishNodeRow: randomIntFromInterval(0, rows - 1),
+        finishNodeCol: randomIntFromInterval(cols / 2 + 1, cols - 1),
+      },
+      () => {
+        const grid = this.getInitialGrid();
+        this.setState({ grid: grid });
+      }
+    );
+  }
+
   render() {
     const { grid, mouseIsPressed } = this.state;
     const side = 65 / this.state.rows;
+    // const side = 95 / this.state.cols;
 
     return (
       <>
+        <div style={{ display: "inline-block" }}>
+          <span className="rangeValue">ROWS: {this.state.rows}</span>
+          <input
+            className="range"
+            id="n_rows"
+            type="range"
+            min="6"
+            step="2"
+            defaultValue="20"
+            max="28"
+            onChange={() => this.updateGridSize()}
+          ></input>
+        </div>
         <button
           className="button_slide slide_down"
           id="btn"
@@ -217,5 +305,10 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   grid[row][col] = newNode;
   return grid;
 };
+
+// Function to generate random numbers from min to max, both inclusive
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // Size with sliders. Change only rows and il rapporto rimane questo (quindi anche le colonne si rimettono noramli)
