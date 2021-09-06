@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Node from "./Node/Node";
 import "./PathFindingVisualizer.css";
-import { dijkstra, getNodesInShortestPathOrder } from "../Algorithms/Dijkstra";
+import { dijkstra } from "../Algorithms/Dijkstra";
+import { getNodesInShortestPathOrder } from "../Algorithms/Utils";
 import "../Design/Button.css";
 import "../Design/SelectBox.css";
 import "../Design/Slider.css";
@@ -126,7 +127,7 @@ export default class PathfindingVisualizer extends Component {
     return grid;
   }
 
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
     // For each visited node
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       // Only if it is the last node start the final animation
@@ -174,7 +175,7 @@ export default class PathfindingVisualizer extends Component {
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
     // Get the nodes, belonging to the shortest path and visisted in order
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
   clearGrid() {
@@ -216,6 +217,11 @@ export default class PathfindingVisualizer extends Component {
     );
   }
 
+  updateSpeed() {
+    const speed = document.getElementById("speed").value;
+    this.setState({ speed: speed }, () => {});
+  }
+
   render() {
     const { grid, mouseIsPressed } = this.state;
     const side = 65 / this.state.rows;
@@ -223,6 +229,19 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
+        <div style={{ display: "inline-block" }}>
+          <span className="rangeValue">SPEED: {this.state.speed}</span>
+          <input
+            className="range"
+            id="speed"
+            type="range"
+            min="1"
+            step="1"
+            defaultValue="10"
+            max="1000"
+            onChange={() => this.updateSpeed()}
+          ></input>
+        </div>
         <div style={{ display: "inline-block" }}>
           <span className="rangeValue">ROWS: {this.state.rows}</span>
           <input
