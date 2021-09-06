@@ -1,14 +1,14 @@
 export function getUnvisitedNeighbors(node, grid) {
   const neighbors = [];
   const { col, row } = node;
-  // Get the neighbour at the left
-  if (row > 0) neighbors.push(grid[row - 1][col]);
   // Get the neighbour at the right
   if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
-  // Get the neighbour at the bottom
-  if (col > 0) neighbors.push(grid[row][col - 1]);
   // Get the neighbour at the top
   if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
+  // Get the neighbour at the bottom
+  if (col > 0) neighbors.push(grid[row][col - 1]);
+  // Get the neighbour at the left
+  if (row > 0) neighbors.push(grid[row - 1][col]);
   // Return only the neighbours that have not been already visited
   return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
