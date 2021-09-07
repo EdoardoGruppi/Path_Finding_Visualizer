@@ -64,6 +64,21 @@
   animation-play-state: running;
 }
 
+.weight-node-visited {
+  background-image: url("./Icons/dumbbell-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 68%;
+  background-position: center;
+  animation-name: visitedAnimation;
+  animation-duration: 1.2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
 @keyframes visitedAnimation {
   0% {
     transform: scale(0.3);
@@ -88,6 +103,13 @@
 
 .node-wall {
   background-color: rgb(12, 53, 71);
+}
+
+.node-weight {
+  background-image: url("./Icons/dumbbell-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 68%;
+  background-position: center;
 }
 
 .node-shortest-path {
@@ -120,6 +142,21 @@
   background-image: url("./Icons/trophy-solid.svg");
   background-repeat: no-repeat;
   background-size: 70%;
+  background-position: center;
+  animation-name: shortestPath;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.weight-node-shortest-path {
+  background-image: url("./Icons/dumbbell-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 68%;
   background-position: center;
   animation-name: shortestPath;
   animation-duration: 1.5s;
