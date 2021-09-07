@@ -35,7 +35,8 @@ function updateUnvisitedNeighbors(node, grid) {
   for (const neighbor of unvisitedNeighbors) {
     // The distance of the neighbours is equal to that of the node plus one
     // So far, the algorithm version does not involve weights
-    neighbor.distance = node.distance + 1;
+    // child distance = dist[currentNode from source] + distance [from currentNode to child node].
+    neighbor.distance = node.distance + neighbor.weight;
     // Link each neighbour to the previous node
     neighbor.previousNode = node;
   }
