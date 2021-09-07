@@ -20,6 +20,8 @@ A star: works similarly to the dijkstra but the distance is computed as the sum 
 
 ## Ideas
 
-Ideas still to implement: weihgts (correct dijkstra code and add weight field), intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm, add intro or algorithm descirptions.
+Ideas still to implement: weights (correct dijkstra code and add weight field), intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm, add intro or algorithm descirptions.
 
 HEURISTIC CONSIDERING WEIGHTED MANHATTAN Distance FOR GREEDY AND A STAR
+
+Note that the weights are set to 15 units.

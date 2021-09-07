@@ -7,8 +7,6 @@ import {
 
 export function aStar(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
-  const openList = [];
-  openList.push(startNode);
   // Except for the starting node the distance == Infinity
   startNode.distance = 0;
   startNode.heuristic = heuristic(startNode, finishNode);
