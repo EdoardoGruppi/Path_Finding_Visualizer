@@ -7,6 +7,7 @@ export default class Node extends Component {
       col,
       isFinish,
       isStart,
+      weight,
       isWall,
       side,
       onMouseDown,
@@ -21,6 +22,8 @@ export default class Node extends Component {
       ? "node-start"
       : isWall
       ? "node-wall"
+      : weight > 1
+      ? "node-weight"
       : "";
 
     return (

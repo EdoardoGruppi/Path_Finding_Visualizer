@@ -14,6 +14,7 @@ import "../Design/Slider.css";
 export default class PathfindingVisualizer extends Component {
   constructor() {
     super();
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.state = {
       grid: [],
       rows: 20,
@@ -25,12 +26,18 @@ export default class PathfindingVisualizer extends Component {
       finishNodeRow: 10,
       finishNodeCol: 35,
       itemPressed: null,
+      keyPressed: "r",
     };
   }
 
   componentDidMount() {
     const grid = this.getInitialGrid();
+    document.addEventListener("keydown", this.handleKeyDown);
     this.setState({ grid: grid });
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
   }
 
   createNode(col, row) {
@@ -74,6 +81,8 @@ export default class PathfindingVisualizer extends Component {
     } else if (node.isFinish) {
       newGrid = this.moveFinishNode(this.state.grid, row, col);
       itemPressed = "finishNode";
+    } else if (this.state.keyPressed === "w") {
+      newGrid = getNewGridWithWeightToggled(this.state.grid, row, col);
     } else {
       newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     }
@@ -92,15 +101,22 @@ export default class PathfindingVisualizer extends Component {
       newGrid = this.moveStartNode(this.state.grid, row, col);
     } else if (this.state.itemPressed === "finishNode") {
       newGrid = this.moveFinishNode(this.state.grid, row, col);
+    } else if (this.state.keyPressed === "w") {
+      newGrid = getNewGridWithWeightToggled(this.state.grid, row, col);
     } else {
       newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     }
+
     this.setState({ grid: newGrid });
   }
 
   handleMouseUp() {
     // Function called when the mouse is pressed up
     this.setState({ mouseIsPressed: false, itemPressed: null });
+  }
+
+  handleKeyDown(e) {
+    if ("rw".includes(e.key)) this.setState({ keyPressed: e.key });
   }
 
   moveStartNode(grid, row, col) {
@@ -148,6 +164,7 @@ export default class PathfindingVisualizer extends Component {
           let extraClass = "";
           if (node.isStart) extraClass = "start-";
           else if (node.isFinish) extraClass = "finish-";
+          else if (node.weight > 1) extraClass = "weight-";
           document.getElementById(
             `node-${node.row}-${node.col}`
           ).className = `node ${extraClass}node-visited`;
@@ -164,6 +181,7 @@ export default class PathfindingVisualizer extends Component {
         let extraClass = "";
         if (node.isStart) extraClass = "start-";
         else if (node.isFinish) extraClass = "finish-";
+        else if (node.weight > 1) extraClass = "weight-";
         document.getElementById(
           `node-${node.row}-${node.col}`
         ).className = `node ${extraClass}node-shortest-path`;
@@ -211,17 +229,19 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  clearGridKeepWall() {
+  clearPath() {
     const { grid } = this.state;
     for (let row of grid) {
       for (let node of row) {
-        resetNode(node, true);
+        resetNode(node, true, true);
         const extraClassName = node.isFinish
           ? "node-finish"
           : node.isStart
           ? "node-start"
           : node.isWall
           ? "node-wall"
+          : node.weight > 1
+          ? "node-weight"
           : "";
         document.getElementById(
           `node-${node.row}-${node.col}`
@@ -298,7 +318,7 @@ export default class PathfindingVisualizer extends Component {
         <button
           className="button_slide slide_down"
           id="btn2"
-          onClick={() => this.clearGridKeepWall()}
+          onClick={() => this.clearPath()}
         >
           CLEAR PATH
         </button>
@@ -323,13 +343,14 @@ export default class PathfindingVisualizer extends Component {
             return (
               <div key={rowIdx}>
                 {row.map((node, nodeIdx) => {
-                  const { row, col, isFinish, isStart, isWall } = node;
+                  const { row, col, isFinish, isStart, isWall, weight } = node;
                   return (
                     <Node
                       key={nodeIdx}
                       row={row}
                       col={col}
                       side={side}
+                      weight={weight}
                       isFinish={isFinish}
                       isStart={isStart}
                       isWall={isWall}
@@ -351,13 +372,13 @@ export default class PathfindingVisualizer extends Component {
   }
 }
 
-function resetNode(node, keepWall = false) {
+function resetNode(node, keepWall = false, keepWeights = false) {
   node.distance = Infinity;
-  node.weight = 1;
   node.heuristic = Infinity;
   node.isVisited = false;
   node.previousNode = null;
   if (!keepWall) node.isWall = false;
+  if (!keepWeights) node.weight = 1;
 }
 
 const getNewGridWithWallToggled = (grid, row, col) => {
@@ -366,6 +387,18 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   const newNode = {
     ...node,
     isWall: !node.isWall,
+    weight: 1,
+  };
+  grid[row][col] = newNode;
+  return grid;
+};
+
+const getNewGridWithWeightToggled = (grid, row, col) => {
+  const node = grid[row][col];
+  const newNode = {
+    ...node,
+    isWall: false,
+    weight: node.weight === 15 ? 1 : 15,
   };
   grid[row][col] = newNode;
   return grid;
