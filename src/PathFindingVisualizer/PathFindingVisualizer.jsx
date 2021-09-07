@@ -4,6 +4,8 @@ import "./PathFindingVisualizer.css";
 import { dijkstra } from "../Algorithms/Dijkstra";
 import { breadthFirst } from "../Algorithms/BreadthFirst";
 import { depthFirst } from "../Algorithms/DepthFirst";
+import { greedy } from "../Algorithms/Greedy";
+import { aStar } from "../Algorithms/AStar";
 import { getNodesInShortestPathOrder } from "../Algorithms/Utils";
 import "../Design/Button.css";
 import "../Design/SelectBox.css";
@@ -41,6 +43,8 @@ export default class PathfindingVisualizer extends Component {
       isFinish:
         row === this.state.finishNodeRow && col === this.state.finishNodeCol,
       distance: Infinity,
+      heuristic: Infinity,
+      weight: 1,
       isVisited: false,
       isWall: false,
       previousNode: null,
@@ -167,40 +171,22 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-  visualizeDijkstra() {
-    const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
-      this.state;
-    // Set up the starting and final nodes
-    const startNode = grid[startNodeRow][startNodeCol];
-    const finishNode = grid[finishNodeRow][finishNodeCol];
-    // Get the visited nodes in order
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    // Get the nodes, belonging to the shortest path and visisted in order
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
-  }
+  visualizeAlgorithm(algorithm) {
+    const dict = {
+      dijkstra: dijkstra,
+      breadthFirst: breadthFirst,
+      depthFirst: depthFirst,
+      greedy: greedy,
+      aStar: aStar,
+    };
 
-  visualizeBreadthFirst() {
     const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
       this.state;
     // Set up the starting and final nodes
     const startNode = grid[startNodeRow][startNodeCol];
     const finishNode = grid[finishNodeRow][finishNodeCol];
     // Get the visited nodes in order
-    const visitedNodesInOrder = breadthFirst(grid, startNode, finishNode);
-    // Get the nodes, belonging to the shortest path and visisted in order
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
-  }
-
-  visualizeDepthFirst() {
-    const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
-      this.state;
-    // Set up the starting and final nodes
-    const startNode = grid[startNodeRow][startNodeCol];
-    const finishNode = grid[finishNodeRow][finishNodeCol];
-    // Get the visited nodes in order
-    const visitedNodesInOrder = depthFirst(grid, startNode, finishNode);
+    const visitedNodesInOrder = dict[algorithm](grid, startNode, finishNode);
     // Get the nodes, belonging to the shortest path and visisted in order
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
@@ -321,14 +307,16 @@ export default class PathfindingVisualizer extends Component {
           className="box slide_down"
           onChange={() => {
             let value = document.getElementById("select_box").value;
-            if (value !== "default") this[value]();
+            if (value !== "default") this.visualizeAlgorithm(value);
           }}
           defaultValue="default"
         >
           <option value="default">ALGORITHM</option>
-          <option value="visualizeDijkstra">DIJKSTRA</option>
-          <option value="visualizeBreadthFirst">BREADTH FIRST</option>
-          <option value="visualizeDepthFirst">DEPTH FIRST</option>
+          <option value="dijkstra">DIJKSTRA</option>
+          <option value="breadthFirst">BREADTH FIRST</option>
+          <option value="depthFirst">DEPTH FIRST</option>
+          <option value="greedy">GREEDY</option>
+          <option value="aStar">A STAR</option>
         </select>
         <div className="grid">
           {grid.map((row, rowIdx) => {
@@ -365,6 +353,8 @@ export default class PathfindingVisualizer extends Component {
 
 function resetNode(node, keepWall = false) {
   node.distance = Infinity;
+  node.weight = 1;
+  node.heuristic = Infinity;
   node.isVisited = false;
   node.previousNode = null;
   if (!keepWall) node.isWall = false;
@@ -385,5 +375,3 @@ const getNewGridWithWallToggled = (grid, row, col) => {
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-// Size with sliders. Change only rows and il rapporto rimane questo (quindi anche le colonne si rimettono noramli)
