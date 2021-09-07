@@ -31,6 +31,19 @@ export function sortNodesByDistance(unvisitedNodes) {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
+export function sortNodesByDistanceToEnd(unvisitedNodes) {
+  // The sorting occurs following an ascending order
+  unvisitedNodes.sort((nodeA, nodeB) => nodeA.heuristic - nodeB.heuristic);
+}
+
+export function sortNodesByTotalDistance(unvisitedNodes) {
+  // The sorting occurs following an ascending order
+  unvisitedNodes.sort(
+    (nodeA, nodeB) =>
+      nodeA.heuristic + nodeA.distance - (nodeB.heuristic + nodeB.distance)
+  );
+}
+
 export function getAllNodes(grid) {
   const nodes = [];
   for (const row of grid) {
@@ -39,4 +52,12 @@ export function getAllNodes(grid) {
     }
   }
   return nodes;
+}
+
+export function heuristic(nodeA, nodeB) {
+  return manhattanDistance(nodeA, nodeB);
+}
+
+function manhattanDistance(nodeA, nodeB) {
+  return Math.abs(nodeA.row - nodeB.row) + Math.abs(nodeA.col - nodeB.col);
 }
