@@ -197,7 +197,7 @@ export default class PathfindingVisualizer extends Component {
       greedy: greedy,
       aStar: aStar,
     };
-
+    this.clearPath();
     const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
       this.state;
     // Set up the starting and final nodes
