@@ -20,8 +20,8 @@ A star: works similarly to the dijkstra but the distance is computed as the sum 
 
 ## Ideas
 
-Ideas still to implement: weights (correct dijkstra code and add weight field), intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm, add intro or algorithm descirptions.
+Ideas still to implement: intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm, add intro or algorithm descirptions.
 
-HEURISTIC CONSIDERING WEIGHTED MANHATTAN Distance FOR GREEDY AND A STAR
+The A\* and Greedy functioning strictly depends on the heuristic function chosen. Albeit both of them exploit a function based on the manhattan distance, this is implemented differently into two distinct variants. Obviously the speed of the search algorithm is greater as the heuristic function better estimates the distance between a node and the target node.
 
 Note that the weights are set to 15 units.
