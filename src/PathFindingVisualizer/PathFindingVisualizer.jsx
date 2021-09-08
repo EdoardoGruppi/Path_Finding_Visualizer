@@ -10,6 +10,8 @@ import { getNodesInShortestPathOrder } from "../Algorithms/Utils";
 import "../Design/Button.css";
 import "../Design/SelectBox.css";
 import "../Design/Slider.css";
+import "../Design/Header.css";
+import "../Design/Text.css";
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -27,6 +29,7 @@ export default class PathfindingVisualizer extends Component {
       finishNodeCol: 35,
       itemPressed: null,
       keyPressed: "r",
+      description: "Press W to insert weights and R to get back to walls.",
     };
   }
 
@@ -197,6 +200,7 @@ export default class PathfindingVisualizer extends Component {
       greedy: greedy,
       aStar: aStar,
     };
+    this.setState({ description: algorithmDescription(algorithm) });
     this.clearPath();
     const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
       this.state;
@@ -282,62 +286,70 @@ export default class PathfindingVisualizer extends Component {
 
     return (
       <>
-        <div style={{ display: "inline-block" }}>
-          <span className="rangeValue">SPEED: {this.state.speed}</span>
-          <input
-            className="range"
-            id="speed"
-            type="range"
-            min="1"
-            step="1"
-            defaultValue="10"
-            max="1000"
-            onChange={() => this.updateSpeed()}
-          ></input>
+        <div className="header">
+          <div style={{ display: "inline-block" }}>
+            <span className="rangeValue">SPEED: {this.state.speed}</span>
+            <input
+              className="range"
+              id="speed"
+              type="range"
+              min="1"
+              step="1"
+              defaultValue="10"
+              max="1000"
+              onChange={() => this.updateSpeed()}
+            ></input>
+          </div>
+          <div style={{ display: "inline-block" }}>
+            <span className="rangeValue">ROWS: {this.state.rows}</span>
+            <input
+              className="range"
+              id="n_rows"
+              type="range"
+              min="5"
+              step="1"
+              defaultValue="20"
+              max="23"
+              onChange={() => this.updateGridSize()}
+            ></input>
+          </div>
+          <button
+            className="button_slide slide_down"
+            id="btn"
+            onClick={() => this.clearGrid()}
+          >
+            CLEAR GRID
+          </button>
+          <button
+            className="button_slide slide_down"
+            id="btn2"
+            onClick={() => this.clearPath()}
+          >
+            CLEAR PATH
+          </button>
+          <select
+            id="select_box"
+            className="box slide_down"
+            onChange={() => {
+              let value = document.getElementById("select_box").value;
+              if (value !== "default") this.visualizeAlgorithm(value);
+              else
+                this.setState({
+                  description:
+                    "Press W to insert weights and R to get back to walls.",
+                });
+            }}
+            defaultValue="default"
+          >
+            <option value="default">ALGORITHM</option>
+            <option value="dijkstra">DIJKSTRA</option>
+            <option value="breadthFirst">BREADTH FIRST</option>
+            <option value="depthFirst">DEPTH FIRST</option>
+            <option value="greedy">GREEDY</option>
+            <option value="aStar">A STAR</option>
+          </select>
         </div>
-        <div style={{ display: "inline-block" }}>
-          <span className="rangeValue">ROWS: {this.state.rows}</span>
-          <input
-            className="range"
-            id="n_rows"
-            type="range"
-            min="5"
-            step="1"
-            defaultValue="20"
-            max="28"
-            onChange={() => this.updateGridSize()}
-          ></input>
-        </div>
-        <button
-          className="button_slide slide_down"
-          id="btn"
-          onClick={() => this.clearGrid()}
-        >
-          CLEAR GRID
-        </button>
-        <button
-          className="button_slide slide_down"
-          id="btn2"
-          onClick={() => this.clearPath()}
-        >
-          CLEAR PATH
-        </button>
-        <select
-          id="select_box"
-          className="box slide_down"
-          onChange={() => {
-            let value = document.getElementById("select_box").value;
-            if (value !== "default") this.visualizeAlgorithm(value);
-          }}
-          defaultValue="default"
-        >
-          <option value="default">ALGORITHM</option>
-          <option value="dijkstra">DIJKSTRA</option>
-          <option value="breadthFirst">BREADTH FIRST</option>
-          <option value="depthFirst">DEPTH FIRST</option>
-          <option value="greedy">GREEDY</option>
-          <option value="aStar">A STAR</option>
-        </select>
+        <div className="text">{this.state.description}</div>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
@@ -407,4 +419,20 @@ const getNewGridWithWeightToggled = (grid, row, col) => {
 // Function to generate random numbers from min to max, both inclusive
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function algorithmDescription(string) {
+  const dict = {
+    dijkstra:
+      "Dijkstra is a weighted algorithm that guarantees the shortest possible path.",
+    breadthFirst:
+      "BreadthFirst is an unweighted algorithm that guarantees the shortest possible path.",
+    depthFirst:
+      "DepthFirst is an unweighted algorithm that does not guarantee the shortest path.",
+    greedy:
+      "Greedy is a weighted algorithm that does not guarantee the shortest path.",
+    aStar:
+      "A* is a weighted algorithm that usually guarantees the shortest possible path.",
+  };
+  return dict[string];
 }
