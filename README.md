@@ -23,6 +23,24 @@ https://edoardogruppi.github.io/Path_Finding_Visualizer/.
 
 ## Some GIFs
 
+### Setup
+
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/48513387/132551692-5fbcb7e2-ac10-441e-9035-a600f8d040f3.gif)
+
+### Greedy algorithm
+
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/48513387/132551707-b9423f65-f83d-4595-928f-88571e46359d.gif)
+
+### Depth First Search algorithm
+
+Note that, being an unweighted algorithm, DFS does not consider the insertion of weights.
+
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/48513387/132551701-2641c98f-947c-41c8-b4d1-017fba285dfd.gif)
+
+### Dijkstra
+
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/48513387/132551697-96438e8f-ce6e-47bd-b625-fae38871a134.gif)
+
 ## Additional notes
 
 <!-- Ideas still to implement: intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm. -->
