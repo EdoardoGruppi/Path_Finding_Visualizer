@@ -34,11 +34,9 @@ export function greedy(grid, startNode, finishNode) {
 function updateUnvisitedNeighbors(node, grid, finishNode) {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
   for (const neighbor of unvisitedNeighbors) {
-    const distanceToEnd = weightedHeuristic(grid, neighbor, finishNode);
+    const distanceToEnd =
+      neighbor.weight + weightedHeuristic(grid, neighbor, finishNode);
     if (neighbor.heuristic > distanceToEnd) neighbor.heuristic = distanceToEnd;
-    console.log(
-      `row: ${neighbor.row} col: ${neighbor.col} newDist: ${neighbor.heuristic}`
-    );
     // Link each neighbour to the previous node
     neighbor.previousNode = node;
   }

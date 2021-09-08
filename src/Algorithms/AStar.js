@@ -1,6 +1,6 @@
 import {
   getUnvisitedNeighbors,
-  heuristic,
+  weightedHeuristic,
   getAllNodes,
   sortNodesByTotalDistance,
 } from "./Utils";
@@ -9,7 +9,7 @@ export function aStar(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   // Except for the starting node the distance == Infinity
   startNode.distance = 0;
-  startNode.heuristic = heuristic(startNode, finishNode);
+  startNode.heuristic = weightedHeuristic(grid, startNode, finishNode);
   // At the beginning all the nodes are unvisited
   const unvisitedNodes = getAllNodes(grid);
   // While there are still unvisited nodes
@@ -37,7 +37,7 @@ function updateUnvisitedNeighbors(node, grid, finishNode) {
   for (const neighbor of unvisitedNeighbors) {
     const distance = node.distance + neighbor.weight;
     if (neighbor.distance > distance) neighbor.distance = distance;
-    neighbor.heuristic = heuristic(neighbor, finishNode);
+    neighbor.heuristic = 1.5 * weightedHeuristic(grid, neighbor, finishNode);
     // Link each neighbour to the previous node
     neighbor.previousNode = node;
   }
