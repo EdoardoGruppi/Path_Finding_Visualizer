@@ -1,13 +1,13 @@
 # Description of the project
 
-[Project](https://github.com/EdoardoGruppi/Path_Finding_Visualizer) ~ [Visualization tool]()
+[Project](https://github.com/EdoardoGruppi/Path_Finding_Visualizer) ~ [Visualization tool](https://edoardogruppi.github.io/Path_Finding_Visualizer/)
 
 This project aims to provide an easy-to-use Graphical User Interface in order to facilitate the visualization of the most widespread pathfinding algorithms. It allows users to change the size of the grid as well as the position of the starting and final nodes. In addition, it is also possible to insert walls and weighted nodes which respectively have a weight of Infinity and 15.
 
 ## How to run
 
 The Sorting Algorithms Visualiser tool is available at the following GitHub page:
-UPDATE LINK
+https://edoardogruppi.github.io/Path_Finding_Visualizer/.
 
 ## Algorithms
 
