@@ -67,8 +67,6 @@ export function weightedHeuristic(grid, nodeA, nodeB) {
 }
 
 function weightedManhattanDistance(grid, nodeA, nodeB) {
-  const distance =
-    Math.abs(nodeA.row - nodeB.row) + Math.abs(nodeA.col - nodeB.col);
   const additionalXChange = sumHorizontalWeights(
     grid,
     nodeA.row,
@@ -83,25 +81,25 @@ function weightedManhattanDistance(grid, nodeA, nodeB) {
   );
   const additionalYChange = sumVerticalWeights(
     grid,
-    nodeA.col,
+    nodeB.col,
     nodeA.row,
     nodeB.row
   );
   const otherYChange = sumVerticalWeights(
     grid,
-    nodeB.col,
+    nodeA.col,
     nodeA.row,
     nodeB.row
   );
   const additionalChange = additionalXChange + additionalYChange;
   const otherChange = otherXChange + otherYChange;
-  if (additionalChange < otherChange) return distance + additionalChange;
-  else return distance + otherChange;
+  if (additionalChange < otherChange) return additionalChange;
+  else return otherChange;
 }
 
 function sumHorizontalWeights(grid, row, col1, col2) {
-  if (col1 > col2) [col1, col2] = [col2, col1];
   let sum = 0;
+  if (col1 > col2) [col1, col2] = [col2, col1];
   for (let currentCol = col1; currentCol <= col2; currentCol++) {
     const currentNode = grid[row][currentCol];
     sum += currentNode.weight;
@@ -110,8 +108,9 @@ function sumHorizontalWeights(grid, row, col1, col2) {
 }
 
 function sumVerticalWeights(grid, col, row1, row2) {
-  if (row1 > row2) [row1, row2] = [row2, row1];
   let sum = 0;
+  if (row1 > row2) [row1, row2] = [row2 + 1, row1];
+  else [row1, row2] = [row1, row2 - 1];
   for (let currentRow = row1; currentRow <= row2; currentRow++) {
     const currentNode = grid[currentRow][col];
     sum += currentNode.weight;
