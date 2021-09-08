@@ -1,27 +1,36 @@
 # Description of the project
 
-Icons from FontAwesome
+[Project](https://github.com/EdoardoGruppi/Path_Finding_Visualizer) ~ [Visualization tool]()
 
-Dijkstra: start from the root node with distance 0 and all the other nodes with distance infintity. Hence once a node is visited, the first is the starting node, update the neighbours distance as the distance of the current node from the beginning + the weight of the node. It is weighted and does guarantee the shortest path.
+This project aims to provide an easy-to-use Graphical User Interface in order to facilitate the visualization of the most widespread pathfinding algorithms. It allows users to change the size of the grid as well as the position of the starting and final nodes. In addition, it is also possible to insert walls and weighted nodes which respectively have a weight of Infinity and 15.
 
-BFS: corresponds to the dijkstra algorithm with all the nodes unweighted (or with the same weight, e.g. 1). It does guarantee the shortest path.
+## How to run
 
-DFS: is an implementation of the backtracking algorithm to search a path that connects the starting node with the target node. The changes in the code are few with respect to BFS. Indeed it is only important to use unshift() instead of push and to modify when the node is considered visited. It is unweighted and does not guarantee the shortest path.
+The Sorting Algorithms Visualiser tool is available at the following GitHub page:
+UPDATE LINK
 
-<!-- Swarm algorithm:
+## Algorithms
 
-Convergent Swarm algorithm:
+**Dijkstra:** starts associating a distance equal to 0 with the root node and equal to Infinity with all the other nodes. Then each time a node is visited (the first cell visited is the starting node), it updates the neighbours distance as the sum of the distance of the current node from the beginning and the weight of the node itself. Dijkstra is weighted and does guarantee the shortest path.
 
-Bidirectional Swarm algorithm: -->
+**Breadth First Search (BFS):** corresponds to the Dijkstra algorithm when all the nodes are unweighted (or have the same weight, e.g. 1). It does guarantee the shortest path.
 
-Greedy best first search: works similarly to the dijkstra but the distance corresponds to the distance estimated between the nodes and the target Node. It is weighted and does guarantee the shortest path.
+**Depth First Search (DFS):** is an implementation of the backtracking algorithm when applied to search a path that connects a starting node with a target node. The changes in the code are few with respect to BFS. Indeed it is only important to use unshift() instead of push and to modify when the node is considered visited. DFS is unweighted and does not guarantee the shortest path.
 
-A star: works similarly to the dijkstra but the distance is computed as the sum of the distance estimated between the node and the target node, the node's weight and the distance between the node and the starting node. It is weighted and does guarantee the shortest path.
+**Greedy best first search:** works similarly to the Dijkstra. Nevertheless, in this case the distance of a node corresponds to the gap heuristically estimated between it and the target Node. It is weighted and does guarantee the shortest path.
 
-## Ideas
+**A star:** operates as the Dijkstra when the heuristic contribute is set to 0. In general, in A\* the distance of a node is computed as the sum of the gap estimated between the node and the target node, the node's weight and the distance between the node and the starting node. It is weighted and guarantees the shortest path whenever the heuristic function is admissible, i.e. it never overestimates the actual cost to reach the objective node.
 
-Ideas still to implement: intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm, add intro or algorithm descirptions.
+## Some GIFs
 
-The A\* and Greedy functioning strictly depends on the heuristic function chosen. Albeit both of them exploit a function based on the manhattan distance, this is implemented differently into two distinct variants. Obviously the speed of the search algorithm is greater as the heuristic function better estimates the distance between a node and the target node.
+## Additional notes
 
-Note that the weights are set to 15 units.
+<!-- Ideas still to implement: intermediary objectives(restart the algorithm considering all the nodes logically unvisited), create mazes algorithm. -->
+
+The A\* and Greedy functioning strictly depends on the heuristic function chosen. Albeit both of them exploit a function based on the manhattan distance, this is implemented differently into two distinct variants. Obviously the accuracy of the search algorithm is greater as the heuristic function better estimates the distance between a node and the target node.
+
+## References
+
+This work is inspired by an idea of Clement Mihailescu ([webpage](http://www.clementmihailescu.com/)).
+
+The icons exploited for the starting node, the final node and the weighted nodes are taken from the FontAwesome Icon Library ([Official website](https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free)).
