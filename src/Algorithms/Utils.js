@@ -110,7 +110,7 @@ function sumHorizontalWeights(grid, row, col1, col2) {
 function sumVerticalWeights(grid, col, row1, row2) {
   let sum = 0;
   if (row1 > row2) [row1, row2] = [row2 + 1, row1];
-  else [row1, row2] = [row1, row2 - 1];
+  else row2 = row2 - 1;
   for (let currentRow = row1; currentRow <= row2; currentRow++) {
     const currentNode = grid[currentRow][col];
     sum += currentNode.weight;
