@@ -14,7 +14,7 @@ export function getUnvisitedNeighbors(node, grid) {
 }
 
 // Backtracks from the finishNode to find the shortest path.
-// It must be called only AFTER the dijkstra method above.
+// It must be called only AFTER the pathfinding algorithm.
 export function getNodesInShortestPathOrder(finishNode) {
   const nodesInShortestPathOrder = [];
   let currentNode = finishNode;
@@ -55,6 +55,7 @@ export function getAllNodes(grid) {
 }
 
 export function heuristic(nodeA, nodeB) {
+  // Heursitic function computed with the manhattan distance
   return manhattanDistance(nodeA, nodeB);
 }
 
@@ -63,10 +64,13 @@ function manhattanDistance(nodeA, nodeB) {
 }
 
 export function weightedHeuristic(grid, nodeA, nodeB) {
+  // Heursitic function computed with a weighted version of the manhattan distance
   return weightedManhattanDistance(grid, nodeA, nodeB);
 }
 
 function weightedManhattanDistance(grid, nodeA, nodeB) {
+  // To get the weighted manhattan distance, this function considers two distinct paths.
+  // The first pass through x1 to x2 and then from y1 to y2. The second viceversa.
   const additionalXChange = sumHorizontalWeights(
     grid,
     nodeA.row,
@@ -93,13 +97,16 @@ function weightedManhattanDistance(grid, nodeA, nodeB) {
   );
   const additionalChange = additionalXChange + additionalYChange;
   const otherChange = otherXChange + otherYChange;
+  // Compare the two paths to return the one that is shortest
   if (additionalChange < otherChange) return additionalChange;
   else return otherChange;
 }
 
 function sumHorizontalWeights(grid, row, col1, col2) {
   let sum = 0;
+  // Swap y1 and y2 if y1 > y2
   if (col1 > col2) [col1, col2] = [col2, col1];
+  // Sum all the weights of the nodes in the path
   for (let currentCol = col1; currentCol <= col2; currentCol++) {
     const currentNode = grid[row][currentCol];
     sum += currentNode.weight;
@@ -109,6 +116,8 @@ function sumHorizontalWeights(grid, row, col1, col2) {
 
 function sumVerticalWeights(grid, col, row1, row2) {
   let sum = 0;
+  // Swap x1 and x2 if x1 > x2. The '+1' and '-1' below are inserted to avoid
+  // considering twice the same node in the corner.
   if (row1 > row2) [row1, row2] = [row2 + 1, row1];
   else row2 = row2 - 1;
   for (let currentRow = row1; currentRow <= row2; currentRow++) {

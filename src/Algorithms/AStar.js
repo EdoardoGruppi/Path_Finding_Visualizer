@@ -35,8 +35,10 @@ export function aStar(grid, startNode, finishNode) {
 function updateUnvisitedNeighbors(node, grid, finishNode) {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
   for (const neighbor of unvisitedNeighbors) {
+    // The distance is computed adding the node weight to the manhattan distance
     const distance = node.distance + neighbor.weight;
     if (neighbor.distance > distance) neighbor.distance = distance;
+    // On the other hand the heuristic is calculated as a weighted variant of the weighted manhattan distance
     neighbor.heuristic = 1.5 * weightedHeuristic(grid, neighbor, finishNode);
     // Link each neighbour to the previous node
     neighbor.previousNode = node;

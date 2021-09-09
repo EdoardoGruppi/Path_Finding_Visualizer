@@ -34,6 +34,8 @@ export function greedy(grid, startNode, finishNode) {
 function updateUnvisitedNeighbors(node, grid, finishNode) {
   const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
   for (const neighbor of unvisitedNeighbors) {
+    // The heuristic here used to compute the distance from the current node to the end is formulated
+    // as the sum between the weighted manhattan distance and the node weight.
     const distanceToEnd =
       neighbor.weight + weightedHeuristic(grid, neighbor, finishNode);
     if (neighbor.heuristic > distanceToEnd) neighbor.heuristic = distanceToEnd;

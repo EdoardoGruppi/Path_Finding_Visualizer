@@ -22,12 +22,16 @@ export default class PathfindingVisualizer extends Component {
       rows: 20,
       cols: 52,
       speed: 10,
+      // Element that follows the mouse events
       mouseIsPressed: false,
+      // Rows and Cols of the starting and final node
       startNodeRow: 10,
       startNodeCol: 15,
       finishNodeRow: 10,
       finishNodeCol: 35,
+      // Element to keep track whether a special node is pressed
       itemPressed: null,
+      // Element to know which key has been pressed
       keyPressed: "r",
       description: "Press W to insert weights and R to get back to walls.",
     };
@@ -35,6 +39,7 @@ export default class PathfindingVisualizer extends Component {
 
   componentDidMount() {
     const grid = this.getInitialGrid();
+    // Add a listener to react when a key is pressed
     document.addEventListener("keydown", this.handleKeyDown);
     this.setState({ grid: grid });
   }
@@ -52,7 +57,9 @@ export default class PathfindingVisualizer extends Component {
         row === this.state.startNodeRow && col === this.state.startNodeCol,
       isFinish:
         row === this.state.finishNodeRow && col === this.state.finishNodeCol,
+      // Distance from the starting Node
       distance: Infinity,
+      // Distance from the end node computed with heuristic
       heuristic: Infinity,
       weight: 1,
       isVisited: false,
@@ -62,6 +69,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   getInitialGrid() {
+    // Create a 2d Array of new nodes
     const grid = [];
     for (let row = 0; row < this.state.rows; row++) {
       const currentRow = [];
@@ -119,6 +127,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleKeyDown(e) {
+    // Keep track of the jey pressed only if it corresponds to r or w
     if ("rw".includes(e.key)) this.setState({ keyPressed: e.key });
   }
 
@@ -126,7 +135,6 @@ export default class PathfindingVisualizer extends Component {
     const { startNodeRow, startNodeCol } = this.state;
     const previousStartNode = grid[startNodeRow][startNodeCol];
     previousStartNode.isStart = false;
-
     const newStartNode = grid[row][col];
     const newNode = {
       ...newStartNode,
@@ -141,7 +149,6 @@ export default class PathfindingVisualizer extends Component {
     const { finishNodeRow, finishNodeCol } = this.state;
     const previousFinishNode = grid[finishNodeRow][finishNodeCol];
     previousFinishNode.isFinish = false;
-
     const newFinishNode = grid[row][col];
     const newNode = {
       ...newFinishNode,
@@ -168,6 +175,7 @@ export default class PathfindingVisualizer extends Component {
           if (node.isStart) extraClass = "start-";
           else if (node.isFinish) extraClass = "finish-";
           else if (node.weight > 1) extraClass = "weight-";
+          // Animate the node according to its characteristics
           document.getElementById(
             `node-${node.row}-${node.col}`
           ).className = `node ${extraClass}node-visited`;
@@ -185,6 +193,7 @@ export default class PathfindingVisualizer extends Component {
         if (node.isStart) extraClass = "start-";
         else if (node.isFinish) extraClass = "finish-";
         else if (node.weight > 1) extraClass = "weight-";
+        // Animate the node according to its characteristics
         document.getElementById(
           `node-${node.row}-${node.col}`
         ).className = `node ${extraClass}node-shortest-path`;
@@ -200,7 +209,9 @@ export default class PathfindingVisualizer extends Component {
       greedy: greedy,
       aStar: aStar,
     };
+    // Update algorithm description
     this.setState({ description: algorithmDescription(algorithm) });
+    // Clean the board from the previous path
     this.clearPath();
     const { grid, startNodeRow, startNodeCol, finishNodeRow, finishNodeCol } =
       this.state;
@@ -218,6 +229,7 @@ export default class PathfindingVisualizer extends Component {
     const { grid } = this.state;
     for (let row of grid) {
       for (let node of row) {
+        // Reset the features of the node
         resetNode(node);
         const extraClassName = node.isFinish
           ? "node-finish"
@@ -226,6 +238,7 @@ export default class PathfindingVisualizer extends Component {
           : node.isWall
           ? "node-wall"
           : "";
+        // Update the node visualization
         document.getElementById(
           `node-${node.row}-${node.col}`
         ).className = `node ${extraClassName}`;
@@ -237,6 +250,7 @@ export default class PathfindingVisualizer extends Component {
     const { grid } = this.state;
     for (let row of grid) {
       for (let node of row) {
+        // Reset each node but retain the wall and the weighted cells
         resetNode(node, true, true);
         const extraClassName = node.isFinish
           ? "node-finish"
@@ -247,6 +261,7 @@ export default class PathfindingVisualizer extends Component {
           : node.weight > 1
           ? "node-weight"
           : "";
+        // Update the node visualization
         document.getElementById(
           `node-${node.row}-${node.col}`
         ).className = `node ${extraClassName}`;
@@ -255,13 +270,16 @@ export default class PathfindingVisualizer extends Component {
   }
 
   updateGridSize() {
+    // Clear the entire grid
     this.clearGrid();
+    // Get the new row values selected through the slider
     const rows = document.getElementById("n_rows").value;
     const cols = rows * 2.6;
     this.setState(
       {
         rows: rows,
         cols: cols,
+        // Randomly set the position of the starting and final nodes
         startNodeRow: randomIntFromInterval(0, rows - 1),
         startNodeCol: randomIntFromInterval(0, cols / 2),
         finishNodeRow: randomIntFromInterval(0, rows - 1),
@@ -275,14 +293,15 @@ export default class PathfindingVisualizer extends Component {
   }
 
   updateSpeed() {
+    // Update the animation speed as expressed by means of the slider
     const speed = document.getElementById("speed").value;
     this.setState({ speed: speed }, () => {});
   }
 
   render() {
     const { grid, mouseIsPressed } = this.state;
+    // Get the size of each cell
     const side = 65 / this.state.rows;
-    // const side = 95 / this.state.cols;
 
     return (
       <>
@@ -394,7 +413,7 @@ function resetNode(node, keepWall = false, keepWeights = false) {
 }
 
 const getNewGridWithWallToggled = (grid, row, col) => {
-  // Recreate the grid changing the wall prop where needed
+  // Recreate the grid changing the wall property where needed
   const node = grid[row][col];
   const newNode = {
     ...node,
@@ -406,6 +425,7 @@ const getNewGridWithWallToggled = (grid, row, col) => {
 };
 
 const getNewGridWithWeightToggled = (grid, row, col) => {
+  // Recreate the grid changing the weight property where needed
   const node = grid[row][col];
   const newNode = {
     ...node,
