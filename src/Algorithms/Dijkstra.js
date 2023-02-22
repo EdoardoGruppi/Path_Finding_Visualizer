@@ -4,6 +4,7 @@ import {
   sortNodesByDistance,
 } from "./Utils";
 
+
 export function dijkstra(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   // Except for the starting node the distance == Infinity
@@ -36,7 +37,7 @@ function updateUnvisitedNeighbors(node, grid) {
     // The distance of the neighbours is equal to that of the node plus one
     // So far, the algorithm version does not involve weights
     // child distance = dist[currentNode from source] + distance [from currentNode to child node].
-    neighbor.distance = node.distance + neighbor.weight;
+    neighbor.distance = Math.min(neighbor.distance, node.distance + neighbor.weight);
     // Link each neighbour to the previous node
     neighbor.previousNode = node;
   }
